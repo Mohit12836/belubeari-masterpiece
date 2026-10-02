@@ -418,6 +418,50 @@
   </header>
 
   <!-- ============================================================
+       LIVE RUNNING INDUSTRIAL TELEMETRY STREAM (DOUBLE-LANE MARQUEE)
+  ============================================================ -->
+  <div class="relative z-30 bg-black/95 border-b border-amber-400/30 overflow-hidden font-mono text-[11px] py-2 shadow-xl">
+    <div class="flex whitespace-nowrap animate-marquee items-center text-amber-300">
+      <span class="inline-flex items-center gap-2 mx-5">
+        <span class="w-2.5 h-2.5 rounded-full bg-red-500 animate-ping"></span>
+        <strong class="text-white bg-red-500/20 px-1.5 py-0.5 rounded border border-red-500/40">LIVE DISPATCH #MB-9841</strong>
+        <span class="text-slate-200">1,850M Mitsuboshi 8M-1040 Synchronous Belt En Route to Surat Weaving Cluster</span>
+      </span>
+      <span class="text-amber-500 font-black">✦</span>
+      <span class="inline-flex items-center gap-2 mx-5">
+        <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse"></span>
+        <strong class="text-white bg-emerald-500/20 px-1.5 py-0.5 rounded border border-emerald-500/40">CUSTOMS CLEARED</strong>
+        <span class="text-slate-200">400 Pcs GCr15 Chrome Deep Groove 6205-2RS Bearings to Bhiwandi Hub</span>
+      </span>
+      <span class="text-cyan-500 font-black">✦</span>
+      <span class="inline-flex items-center gap-2 mx-5">
+        <span class="w-2.5 h-2.5 rounded-full bg-cyan-400 animate-ping"></span>
+        <strong class="text-white bg-cyan-500/20 px-1.5 py-0.5 rounded border border-cyan-500/40">EXPRESS 4-HR DISPATCH</strong>
+        <span class="text-slate-200">ContiTech Synchroforce Carbon Timing Belt Delivered to Rabale MIDC OEM</span>
+      </span>
+      <span class="text-amber-500 font-black">✦</span>
+      <span class="inline-flex items-center gap-2 mx-5">
+        <span class="w-2.5 h-2.5 rounded-full bg-amber-400"></span>
+        <strong class="text-white bg-amber-500/20 px-1.5 py-0.5 rounded border border-amber-500/40">STOCK READY</strong>
+        <span class="text-slate-200">10,000+ Ready SKUs in Masjid Bunder Central Stockyard (Mumbai – 400003)</span>
+      </span>
+      <span class="text-emerald-500 font-black">✦</span>
+      <!-- Duplicate for seamless infinite loop -->
+      <span class="inline-flex items-center gap-2 mx-5">
+        <span class="w-2.5 h-2.5 rounded-full bg-red-500 animate-ping"></span>
+        <strong class="text-white bg-red-500/20 px-1.5 py-0.5 rounded border border-red-500/40">LIVE DISPATCH #MB-9841</strong>
+        <span class="text-slate-200">1,850M Mitsuboshi 8M-1040 Synchronous Belt En Route to Surat Weaving Cluster</span>
+      </span>
+      <span class="text-amber-500 font-black">✦</span>
+      <span class="inline-flex items-center gap-2 mx-5">
+        <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse"></span>
+        <strong class="text-white bg-emerald-500/20 px-1.5 py-0.5 rounded border border-emerald-500/40">CUSTOMS CLEARED</strong>
+        <span class="text-slate-200">400 Pcs GCr15 Chrome Deep Groove 6205-2RS Bearings to Bhiwandi Hub</span>
+      </span>
+    </div>
+  </div>
+
+  <!-- ============================================================
        3. AWWWARDS-GRADE 3D INTERACTIVE WEBGL HERO SECTION
   ============================================================ -->
   <section id="home" class="relative z-10 pt-4 sm:pt-10 pb-12 sm:pb-20 border-b border-white/10 overflow-hidden">
@@ -523,17 +567,47 @@
       
       <div class="text-center max-w-2xl mx-auto mb-8 sm:mb-12">
         <span class="text-xs font-mono uppercase tracking-widest text-cyan-300 font-bold bg-cyan-500/10 px-3 py-1 rounded-full border border-cyan-400/30">
-          Mechanical Simulation
+          Live Kinetic Transmission Engine
         </span>
         <h2 class="font-display font-black text-2xl sm:text-4xl mt-2 text-white">
           Interactive Transmission CAD Workbench
         </h2>
         <p class="text-xs sm:text-sm text-slate-300 mt-2 font-mono">
-          Adjust motor RPM to simulate synchronous belt linear speed, gear ratio, and acoustic frequency in real time.
+          Watch synchronous belts & pulleys sprint in real time. Adjust motor RPM or toggle Turbo Boost to simulate velocity, reduction ratio, and torque.
         </p>
       </div>
 
       <div class="cyber-card rounded-3xl p-5 sm:p-8 max-w-4xl mx-auto">
+        
+        <!-- LIVE 2D RUNNING TRANSMISSION BELT & GEAR CANVAS -->
+        <div class="relative rounded-2xl bg-slate-950 border border-amber-400/40 p-2 mb-6 overflow-hidden shadow-2xl">
+          <div class="flex items-center justify-between px-3 py-1.5 border-b border-white/10 font-mono text-[11px]">
+            <span class="text-amber-300 font-bold flex items-center gap-1.5">
+              <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
+              <span>LIVE TRANSMISSION ROTATION & CONTACT SIMULATION</span>
+            </span>
+            <span id="canvasRpmLiveBadge" class="text-cyan-400 font-bold">1440 RPM • 5.38 m/s</span>
+          </div>
+          <canvas id="mechanical2DCanvas" class="w-full h-44 sm:h-52 rounded-xl block"></canvas>
+          
+          <!-- Speed Boost Preset Pills -->
+          <div class="flex flex-wrap items-center justify-center gap-2 pt-2 border-t border-white/10 font-mono text-xs">
+            <span class="text-slate-400 text-[11px]">QUICK PRESETS:</span>
+            <button onclick="setSimRpm(720)" class="px-2.5 py-1 rounded-lg bg-white/10 hover:bg-white/20 text-emerald-300 text-[11px] font-bold border border-emerald-400/30 transition btn-spring">
+              🟢 720 RPM (Eco)
+            </button>
+            <button onclick="setSimRpm(1440)" class="px-2.5 py-1 rounded-lg bg-amber-400 text-slate-950 text-[11px] font-black shadow transition btn-spring">
+              🟡 1440 RPM (Standard)
+            </button>
+            <button onclick="setSimRpm(2400)" class="px-2.5 py-1 rounded-lg bg-white/10 hover:bg-white/20 text-cyan-300 text-[11px] font-bold border border-cyan-400/30 transition btn-spring">
+              🔵 2400 RPM (High)
+            </button>
+            <button onclick="setSimRpm(3000)" class="px-2.5 py-1 rounded-lg bg-gradient-to-r from-red-500 to-amber-500 text-white text-[11px] font-black shadow-lg shadow-red-500/30 transition btn-spring">
+              ⚡ 3000 RPM (Turbo Boost)
+            </button>
+          </div>
+        </div>
+
         <div class="grid grid-cols-1 md:grid-cols-12 gap-6 items-center">
           
           <!-- RPM & Torque Controls -->
@@ -911,20 +985,57 @@
               </defs>
               <rect width="600" height="320" fill="url(#radarGrid)" />
 
-              <!-- Trajectory Lines from Mumbai (180, 200) -->
+              <!-- Trajectory Lines from Mumbai (180, 200) with Live GPS Vehicles -->
               <!-- Route 1: Mumbai to Gujarat (Vapi/Surat) -->
-              <path d="M 180 200 Q 170 120 160 80" fill="none" stroke="url(#beamLine)" stroke-width="2.5" stroke-dasharray="6,4" />
+              <path id="radarRoute1" d="M 180 200 Q 170 120 160 80" fill="none" stroke="url(#beamLine)" stroke-width="2.5" stroke-dasharray="6,4" />
               <!-- Route 2: Mumbai to Pune/Nashik -->
-              <path d="M 180 200 Q 230 220 280 230" fill="none" stroke="url(#beamLine)" stroke-width="2.5" stroke-dasharray="6,4" />
+              <path id="radarRoute2" d="M 180 200 Q 230 220 280 230" fill="none" stroke="url(#beamLine)" stroke-width="2.5" stroke-dasharray="6,4" />
               <!-- Route 3: Mumbai to Delhi NCR -->
-              <path d="M 180 200 Q 260 120 320 50" fill="none" stroke="url(#beamLine)" stroke-width="2.5" stroke-dasharray="6,4" />
+              <path id="radarRoute3" d="M 180 200 Q 260 120 320 50" fill="none" stroke="url(#beamLine)" stroke-width="2.5" stroke-dasharray="6,4" />
               <!-- Route 4: Mumbai to Bengaluru/Chennai -->
-              <path d="M 180 200 Q 260 270 340 290" fill="none" stroke="url(#beamLine)" stroke-width="2.5" stroke-dasharray="6,4" />
+              <path id="radarRoute4" d="M 180 200 Q 260 270 340 290" fill="none" stroke="url(#beamLine)" stroke-width="2.5" stroke-dasharray="6,4" />
               <!-- Route 5: Mumbai to Kolkata -->
-              <path d="M 180 200 Q 380 160 520 150" fill="none" stroke="url(#beamLine)" stroke-width="2.5" stroke-dasharray="6,4" />
+              <path id="radarRoute5" d="M 180 200 Q 380 160 520 150" fill="none" stroke="url(#beamLine)" stroke-width="2.5" stroke-dasharray="6,4" />
+
+              <!-- Live Animated Delivery Laser Pulses (Racing across routes) -->
+              <g>
+                <circle r="5" fill="#facc15">
+                  <animateMotion dur="2.4s" repeatCount="indefinite">
+                    <mpath href="#radarRoute1" />
+                  </animateMotion>
+                </circle>
+              </g>
+              <g>
+                <circle r="5" fill="#10b981">
+                  <animateMotion dur="2.8s" repeatCount="indefinite">
+                    <mpath href="#radarRoute2" />
+                  </animateMotion>
+                </circle>
+              </g>
+              <g>
+                <circle r="5" fill="#06b6d4">
+                  <animateMotion dur="3.2s" repeatCount="indefinite">
+                    <mpath href="#radarRoute3" />
+                  </animateMotion>
+                </circle>
+              </g>
+              <g>
+                <circle r="5" fill="#10b981">
+                  <animateMotion dur="3.6s" repeatCount="indefinite">
+                    <mpath href="#radarRoute4" />
+                  </animateMotion>
+                </circle>
+              </g>
+              <g>
+                <circle r="5" fill="#fbbf24">
+                  <animateMotion dur="4.2s" repeatCount="indefinite">
+                    <mpath href="#radarRoute5" />
+                  </animateMotion>
+                </circle>
+              </g>
 
               <!-- Mumbai Central Sourcing Hub Pulse Beacon -->
-              <circle cx="180" cy="200" r="18" fill="rgba(250, 204, 21, 0.2)" class="animate-pulse" />
+              <circle cx="180" cy="200" r="20" fill="rgba(250, 204, 21, 0.25)" class="animate-pulse" />
               <circle cx="180" cy="200" r="8" fill="#facc15" />
               <text x="180" y="228" fill="#facc15" font-size="11" font-weight="bold" font-family="monospace" text-anchor="middle">MUMBAI HUB</text>
 
@@ -1480,15 +1591,200 @@
     window.addEventListener('DOMContentLoaded', initThreeJS);
 
     // -------------------------------------------------------------
-    // C. 3D TRANSMISSION SPEED SIMULATOR
+    // C. REAL-TIME 2D KINETIC TRANSMISSION CANVAS ANIMATION ENGINE
     // -------------------------------------------------------------
+    const mechCanvas = document.getElementById('mechanical2DCanvas');
+    const mCtx = mechCanvas ? mechCanvas.getContext('2d') : null;
+    let mechAngle1 = 0;
+    let mechAngle2 = 0;
+    let beltOffset = 0;
+    let currentSimRpm = 1440;
+    let isMechInView = true;
+    let gearSparks = [];
+
+    function resizeMechCanvas() {
+      if (!mechCanvas) return;
+      mechCanvas.width = mechCanvas.clientWidth * (window.devicePixelRatio > 1 ? 2 : 1);
+      mechCanvas.height = mechCanvas.clientHeight * (window.devicePixelRatio > 1 ? 2 : 1);
+    }
+    resizeMechCanvas();
+    window.addEventListener('resize', resizeMechCanvas, { passive: true });
+
+    const mechObserver = new IntersectionObserver((entries) => {
+      entries.forEach(e => { isMechInView = e.isIntersecting; });
+    }, { threshold: 0.05 });
+    const workbenchEl = document.getElementById('3d-workbench');
+    if (workbenchEl) mechObserver.observe(workbenchEl);
+
+    function setSimRpm(rpm) {
+      currentSimRpm = rpm;
+      const slider = document.getElementById('rpmSlider');
+      if (slider) slider.value = rpm;
+      updateRpmSim(rpm);
+      if (sound) {
+        if (rpm >= 2800) sound.playWarp();
+        else sound.playClick();
+      }
+    }
+
+    function drawGear(ctx, cx, cy, radius, teeth, angle, color, label) {
+      ctx.save();
+      ctx.translate(cx, cy);
+      ctx.rotate(angle);
+
+      // Outer tooth perimeter
+      ctx.fillStyle = color;
+      ctx.beginPath();
+      const numTeeth = teeth;
+      const toothDepth = radius * 0.16;
+      for (let i = 0; i < numTeeth; i++) {
+        const a1 = (i / numTeeth) * Math.PI * 2;
+        const a2 = ((i + 0.5) / numTeeth) * Math.PI * 2;
+        const a3 = ((i + 1) / numTeeth) * Math.PI * 2;
+
+        const rOut = radius + toothDepth;
+        const rIn = radius;
+
+        if (i === 0) ctx.moveTo(Math.cos(a1) * rIn, Math.sin(a1) * rIn);
+        ctx.lineTo(Math.cos(a1) * rOut, Math.sin(a1) * rOut);
+        ctx.lineTo(Math.cos(a2) * rOut, Math.sin(a2) * rOut);
+        ctx.lineTo(Math.cos(a2) * rIn, Math.sin(a2) * rIn);
+        ctx.lineTo(Math.cos(a3) * rIn, Math.sin(a3) * rIn);
+      }
+      ctx.closePath();
+      ctx.fill();
+
+      // Metallic Center Rim
+      ctx.fillStyle = '#0f172a';
+      ctx.beginPath();
+      ctx.arc(0, 0, radius * 0.72, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.strokeStyle = color;
+      ctx.lineWidth = 3;
+      ctx.stroke();
+
+      // Hub Spokes
+      ctx.strokeStyle = 'rgba(255,255,255,0.3)';
+      ctx.lineWidth = 4;
+      for (let j = 0; j < 4; j++) {
+        const sa = (j / 4) * Math.PI * 2;
+        ctx.beginPath();
+        ctx.moveTo(0, 0);
+        ctx.lineTo(Math.cos(sa) * radius * 0.65, Math.sin(sa) * radius * 0.65);
+        ctx.stroke();
+      }
+
+      // Center Bore Keyway
+      ctx.fillStyle = '#f8fafc';
+      ctx.beginPath();
+      ctx.arc(0, 0, radius * 0.22, 0, Math.PI * 2);
+      ctx.fill();
+
+      ctx.restore();
+
+      // Static Center Label
+      ctx.save();
+      ctx.fillStyle = '#ffffff';
+      ctx.font = 'bold 11px JetBrains Mono, monospace';
+      ctx.textAlign = 'center';
+      ctx.fillText(label, cx, cy + radius + 24);
+      ctx.restore();
+    }
+
+    function animateMechanicalCanvas() {
+      requestAnimationFrame(animateMechanicalCanvas);
+      if (!mCtx || !mechCanvas || !isMechInView) return;
+
+      const w = mechCanvas.width;
+      const h = mechCanvas.height;
+      const isRetina = window.devicePixelRatio > 1 ? 2 : 1;
+
+      mCtx.clearRect(0, 0, w, h);
+
+      const z1 = parseFloat(document.getElementById('simZ1').value) || 28;
+      const z2 = parseFloat(document.getElementById('simZ2').value) || 48;
+      const ratio = z2 / z1;
+      const speedFactor = (currentSimRpm / 1440) * 0.08;
+
+      mechAngle1 += speedFactor;
+      mechAngle2 -= speedFactor / ratio;
+      beltOffset += speedFactor * 45;
+
+      const c1x = w * 0.28;
+      const c1y = h * 0.48;
+      const r1 = Math.min(w, h) * 0.22;
+
+      const c2x = w * 0.72;
+      const c2y = h * 0.48;
+      const r2 = r1 / ratio;
+
+      // Draw Tangent Synchronous Timing Belt Loop
+      mCtx.save();
+      mCtx.strokeStyle = '#334155';
+      mCtx.lineWidth = 14 * isRetina;
+      mCtx.lineCap = 'round';
+      mCtx.beginPath();
+      // Top Span
+      mCtx.moveTo(c1x, c1y - r1 - 4 * isRetina);
+      mCtx.lineTo(c2x, c2y - r2 - 4 * isRetina);
+      mCtx.arc(c2x, c2y, r2 + 4 * isRetina, -Math.PI / 2, Math.PI / 2);
+      // Bottom Span
+      mCtx.lineTo(c1x, c1y + r1 + 4 * isRetina);
+      mCtx.arc(c1x, c1y, r1 + 4 * isRetina, Math.PI / 2, -Math.PI / 2);
+      mCtx.stroke();
+
+      // Draw Gold Timing Belt Teeth running along the belt
+      mCtx.strokeStyle = '#facc15';
+      mCtx.lineWidth = 4 * isRetina;
+      mCtx.setLineDash([8 * isRetina, 6 * isRetina]);
+      mCtx.lineDashOffset = -beltOffset;
+      mCtx.stroke();
+      mCtx.restore();
+
+      // Draw Rotating Driver Pulley (Gold)
+      drawGear(mCtx, c1x, c1y, r1, z1, mechAngle1, '#facc15', `DRIVER: ${currentSimRpm} RPM (${z1}T)`);
+
+      // Draw Rotating Driven Pulley (Cyan)
+      const outRpm = Math.round(currentSimRpm / ratio);
+      drawGear(mCtx, c2x, c2y, r2, z2, mechAngle2, '#06b6d4', `DRIVEN: ${outRpm} RPM (${z2}T)`);
+
+      // Spark Generation at High Speeds / Contact Point
+      if (currentSimRpm > 1000 && Math.random() < (currentSimRpm / 3000) * 0.6) {
+        gearSparks.push({
+          x: c1x + Math.cos(-Math.PI / 2) * r1,
+          y: c1y - r1,
+          vx: (Math.random() - 0.5) * 6,
+          vy: -Math.random() * 5,
+          life: 1
+        });
+      }
+
+      // Draw Sparks
+      for (let i = gearSparks.length - 1; i >= 0; i--) {
+        const sp = gearSparks[i];
+        sp.x += sp.vx;
+        sp.y += sp.vy;
+        sp.life -= 0.05;
+        if (sp.life <= 0) {
+          gearSparks.splice(i, 1);
+        } else {
+          mCtx.fillStyle = `rgba(250, 204, 21, ${sp.life})`;
+          mCtx.beginPath();
+          mCtx.arc(sp.x, sp.y, 2.5 * isRetina * sp.life, 0, Math.PI * 2);
+          mCtx.fill();
+        }
+      }
+    }
+    animateMechanicalCanvas();
+
     function updateRpmSim(val) {
-      document.getElementById('rpmDisplay').textContent = `${val} RPM`;
+      currentSimRpm = parseFloat(val) || 1440;
+      document.getElementById('rpmDisplay').textContent = `${currentSimRpm} RPM`;
       updateTransmissionRatio();
     }
 
     function updateTransmissionRatio() {
-      const rpm = parseFloat(document.getElementById('rpmSlider').value) || 1440;
+      const rpm = currentSimRpm;
       const z1 = parseFloat(document.getElementById('simZ1').value) || 28;
       const z2 = parseFloat(document.getElementById('simZ2').value) || 48;
 
@@ -1500,6 +1796,9 @@
       document.getElementById('simOutputRpm').textContent = `${outRpm} RPM`;
       document.getElementById('simBeltSpeed').textContent = `${beltSpeedMS} m/s`;
       document.getElementById('simRatio').textContent = `1 : ${ratio.toFixed(2)}`;
+      
+      const badge = document.getElementById('canvasRpmLiveBadge');
+      if (badge) badge.textContent = `${rpm} RPM • ${beltSpeedMS} m/s`;
 
       if (controls) {
         controls.autoRotateSpeed = (rpm / 1440) * 2.5;
