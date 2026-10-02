@@ -72,9 +72,6 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
 
-  <!-- Lenis Smooth Scroll Engine CDN -->
-  <script src="https://unpkg.com/lenis@1.1.9/dist/lenis.min.js"></script>
-
   <style>
     *, *::before, *::after {
       box-sizing: border-box;
@@ -82,15 +79,19 @@
       padding: 0;
     }
     
-    html, body {
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
       width: 100%;
       max-width: 100%;
       overflow-x: clip;
-      scroll-behavior: smooth;
+      -webkit-overflow-scrolling: touch;
       text-rendering: optimizeLegibility;
       -webkit-font-smoothing: antialiased;
       font-family: 'Plus Jakarta Sans', sans-serif;
-      transition: background 0.35s ease, color 0.35s ease;
+      transition: background 0.3s ease, color 0.3s ease;
     }
 
     .font-display { font-family: 'Space Grotesk', sans-serif; }
@@ -104,20 +105,26 @@
       padding-inline: clamp(0.75rem, 3.5vw, 2.5rem);
     }
 
-    /* Cyber-Industrial Bento Surface */
+    /* Ultra-Smooth Cyber Bento Surface */
     .cyber-card {
-      background: linear-gradient(135deg, rgba(15, 23, 42, 0.85) 0%, rgba(3, 7, 18, 0.95) 100%);
-      border: 1px solid rgba(250, 204, 21, 0.2);
-      box-shadow: 0 16px 40px -10px rgba(0, 0, 0, 0.8), inset 0 1px 0 rgba(255, 255, 255, 0.1);
-      backdrop-filter: blur(20px);
+      background: linear-gradient(135deg, rgba(15, 23, 42, 0.96) 0%, rgba(3, 7, 18, 0.98) 100%);
+      border: 1px solid rgba(250, 204, 21, 0.22);
+      box-shadow: 0 12px 32px -8px rgba(0, 0, 0, 0.7), inset 0 1px 0 rgba(255, 255, 255, 0.08);
       position: relative;
       overflow: hidden;
-      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      contain: layout style paint;
+      transition: border-color 0.25s ease, box-shadow 0.25s ease, transform 0.25s ease;
     }
     .cyber-card:hover {
       border-color: rgba(250, 204, 21, 0.6);
-      box-shadow: 0 24px 50px -10px rgba(0, 0, 0, 0.9), 0 0 30px 2px rgba(250, 204, 21, 0.2);
-      transform: translateY(-4px);
+      box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.9), 0 0 25px 2px rgba(250, 204, 21, 0.25);
+      transform: translateY(-3px);
+    }
+
+    /* Auto Offscreen Virtualization for 120 FPS */
+    .item-card {
+      content-visibility: auto;
+      contain-intrinsic-size: 0 380px;
     }
 
     /* Crosshair Corner Marks */
@@ -1399,26 +1406,33 @@
       scene.add(bearingGroup);
 
       window.addEventListener('resize', () => {
-        if (!container) return;
+        if (!container || !renderer || !camera) return;
         const w = container.clientWidth;
         const h = container.clientHeight;
         camera.aspect = w / h;
         camera.updateProjectionMatrix();
         renderer.setSize(w, h);
-      });
+      }, { passive: true });
 
+      // Only render 3D WebGL when hero is actually visible in viewport
+      let isHeroInView = true;
+      const heroObs = new IntersectionObserver((entries) => {
+        entries.forEach(e => { isHeroInView = e.isIntersecting; });
+      }, { threshold: 0.05 });
+      heroObs.observe(container);
+
+      function animateThree() {
+        requestAnimationFrame(animateThree);
+        if (!isHeroInView) return; // 0% GPU/CPU overhead when scrolled down!
+        
+        if (pulleyMesh1) pulleyMesh1.rotation.y += 0.015;
+        if (pulleyMesh2) pulleyMesh2.rotation.y -= 0.025;
+        if (bearingGroup) bearingGroup.rotation.z += 0.012;
+
+        controls.update();
+        renderer.render(scene, camera);
+      }
       animateThree();
-    }
-
-    function animateThree() {
-      requestAnimationFrame(animateThree);
-      
-      if (pulleyMesh1) pulleyMesh1.rotation.y += 0.02;
-      if (pulleyMesh2) pulleyMesh2.rotation.y -= 0.035;
-      if (bearingGroup) bearingGroup.rotation.z += 0.015;
-
-      controls.update();
-      renderer.render(scene, camera);
     }
 
     function toggle3DMode(mode) {
@@ -1624,72 +1638,54 @@ _Please share technical data sheet, bulk carton rates & stock availability._`;
     }
 
     // -------------------------------------------------------------
-    // F. DYNAMIC CANVAS SUPERNOVA SPARK PARTICLES
+    // F. HIGH-PERFORMANCE CLICK BURST (NO CONTINUOUS GPU DRAIN)
     // -------------------------------------------------------------
     const sparkCanvas = document.getElementById('sparkCanvas');
-    const sCtx = sparkCanvas.getContext('2d');
-    let sparkParticles = [];
+    const sCtx = sparkCanvas ? sparkCanvas.getContext('2d') : null;
     let supernovaClicks = [];
+    let isSparkLoopRunning = false;
 
     function resizeSparkCanvas() {
+      if (!sparkCanvas) return;
       sparkCanvas.width = window.innerWidth;
       sparkCanvas.height = window.innerHeight;
     }
     resizeSparkCanvas();
-    window.addEventListener('resize', resizeSparkCanvas);
+    window.addEventListener('resize', resizeSparkCanvas, { passive: true });
 
-    class BgSpark {
-      constructor() {
-        this.x = Math.random() * sparkCanvas.width;
-        this.y = Math.random() * sparkCanvas.height;
-        this.size = Math.random() * 2 + 0.8;
-        this.speedX = (Math.random() - 0.5) * 0.4;
-        this.speedY = (Math.random() - 0.5) * 0.4;
-      }
-      update() {
-        this.x += this.speedX;
-        this.y += this.speedY;
-        if (this.x < 0 || this.x > sparkCanvas.width) this.speedX *= -1;
-        if (this.y < 0 || this.y > sparkCanvas.height) this.speedY *= -1;
-      }
-      draw() {
-        sCtx.fillStyle = 'rgba(250, 204, 21, 0.7)';
-        sCtx.beginPath();
-        sCtx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-        sCtx.fill();
-      }
-    }
-
-    for (let i = 0; i < 40; i++) sparkParticles.push(new BgSpark());
-
-    window.addEventListener('click', (e) => {
-      sound.playClick();
-      for (let i = 0; i < 20; i++) {
+    window.addEventListener('pointerdown', (e) => {
+      if (sound) sound.playClick();
+      if (!sCtx) return;
+      for (let i = 0; i < 12; i++) {
         supernovaClicks.push({
           x: e.clientX,
           y: e.clientY,
-          vx: (Math.random() - 0.5) * 7,
-          vy: (Math.random() - 0.5) * 7,
+          vx: (Math.random() - 0.5) * 5,
+          vy: (Math.random() - 0.5) * 5,
           life: 1,
-          size: Math.random() * 3 + 1,
+          size: Math.random() * 2.5 + 1,
           color: Math.random() > 0.5 ? '250, 204, 21' : '6, 182, 212'
         });
       }
-    });
+      if (!isSparkLoopRunning) {
+        isSparkLoopRunning = true;
+        requestAnimationFrame(renderSparkBurst);
+      }
+    }, { passive: true });
 
-    function animateSparks() {
+    function renderSparkBurst() {
+      if (!sCtx || supernovaClicks.length === 0) {
+        if (sCtx) sCtx.clearRect(0, 0, sparkCanvas.width, sparkCanvas.height);
+        isSparkLoopRunning = false;
+        return;
+      }
       sCtx.clearRect(0, 0, sparkCanvas.width, sparkCanvas.height);
-
-      sparkParticles.forEach(p => {
-        p.update();
-        p.draw();
-      });
 
       for (let i = supernovaClicks.length - 1; i >= 0; i--) {
         const s = supernovaClicks[i];
         s.x += s.vx;
         s.y += s.vy;
-        s.life -= 0.035;
+        s.life -= 0.045;
 
         if (s.life <= 0) {
           supernovaClicks.splice(i, 1);
@@ -1700,95 +1696,82 @@ _Please share technical data sheet, bulk carton rates & stock availability._`;
           sCtx.fill();
         }
       }
-
-      requestAnimationFrame(animateSparks);
+      requestAnimationFrame(renderSparkBurst);
     }
-    animateSparks();
 
     // -------------------------------------------------------------
-    // G. LENIS SMOOTH SCROLL + GSAP PARALLAX ANIMATION ENGINE
+    // G. 120 FPS HARDWARE-ACCELERATED SCROLL & INTERSECTION OBSERVER
     // -------------------------------------------------------------
     gsap.registerPlugin(ScrollTrigger);
 
-    let lenis;
-    if (typeof Lenis !== 'undefined') {
-      lenis = new Lenis({
-        duration: 1.2,
-        easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
-        orientation: 'vertical',
-        smoothWheel: true,
-        touchMultiplier: 1.5,
-      });
-
-      lenis.on('scroll', ScrollTrigger.update);
-
-      gsap.ticker.add((time) => {
-        lenis.raf(time * 1000);
-      });
-      gsap.ticker.lagSmoothing(0);
-    }
-
-    // Parallax Effect 1: Hero 3D Card and Heading Differential Scrub
+    // Hero 3D Card and Heading Differential Scrub
     gsap.to('#home h1', {
       scrollTrigger: {
         trigger: '#home',
         start: 'top top',
         end: 'bottom top',
-        scrub: 1.2,
+        scrub: 1,
       },
-      y: -60,
-      opacity: 0.3,
-      scale: 0.96,
+      y: -40,
+      opacity: 0.5,
     });
 
-    // Parallax Effect 2: Three.js 3D Camera Rotation on Scroll
+    // 3D Camera Rotation Sync with Scroll
     ScrollTrigger.create({
       trigger: 'body',
       start: 'top top',
       end: 'bottom bottom',
-      scrub: 1.5,
+      scrub: 1,
       onUpdate: (self) => {
-        if (camera && scene) {
+        if (camera && scene && isHeroInView) {
           const progress = self.progress;
-          camera.position.y = 15 + Math.sin(progress * Math.PI * 2) * 8;
-          camera.position.x = Math.cos(progress * Math.PI * 2) * 12;
+          camera.position.y = 15 + Math.sin(progress * Math.PI * 2) * 6;
+          camera.position.x = Math.cos(progress * Math.PI * 2) * 10;
           camera.lookAt(0, 0, 0);
         }
       }
     });
 
-    // Parallax Effect 3: Staggered Bento Cards Scroll Reveal
-    gsap.utils.toArray('.item-card').forEach((card, index) => {
-      gsap.from(card, {
-        scrollTrigger: {
-          trigger: card,
-          start: 'top 92%',
-          toggleActions: 'play none none none',
-        },
-        y: 40,
-        opacity: 0,
-        duration: 0.6,
-        delay: (index % 4) * 0.08,
-        ease: 'power2.out',
+    // High Performance Staggered Reveal via IntersectionObserver
+    const cardObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.style.opacity = '1';
+          entry.target.style.transform = 'translateY(0)';
+          cardObserver.unobserve(entry.target);
+        }
       });
+    }, { rootMargin: '50px 0px', threshold: 0.05 });
+
+    document.querySelectorAll('.item-card').forEach(card => {
+      card.style.opacity = '0';
+      card.style.transform = 'translateY(24px)';
+      card.style.transition = 'opacity 0.4s ease-out, transform 0.4s cubic-bezier(0.16, 1, 0.3, 1)';
+      cardObserver.observe(card);
     });
 
-    // Parallax Effect 4: Real-Time 3D Mouse / Touch Tilt on Cards
-    const tiltElements = document.querySelectorAll('.cyber-card');
-    tiltElements.forEach(card => {
-      card.addEventListener('mousemove', (e) => {
-        const rect = card.getBoundingClientRect();
-        const x = e.clientX - rect.left - rect.width / 2;
-        const y = e.clientY - rect.top - rect.height / 2;
-        const rotateX = -(y / rect.height) * 10;
-        const rotateY = (x / rect.width) * 10;
-        card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(-4px)`;
-      });
+    // 3D Mouse Tilt (Desktop Fine Pointer Only - No Mobile Overhead)
+    if (window.matchMedia('(hover: hover) and (pointer: fine)').matches) {
+      let tiltRaf = null;
+      document.querySelectorAll('.cyber-card').forEach(card => {
+        card.addEventListener('mousemove', (e) => {
+          if (tiltRaf) return;
+          tiltRaf = requestAnimationFrame(() => {
+            const rect = card.getBoundingClientRect();
+            const x = e.clientX - rect.left - rect.width / 2;
+            const y = e.clientY - rect.top - rect.height / 2;
+            const rotateX = -(y / rect.height) * 8;
+            const rotateY = (x / rect.width) * 8;
+            card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(-3px)`;
+            tiltRaf = null;
+          });
+        }, { passive: true });
 
-      card.addEventListener('mouseleave', () => {
-        card.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg) translateY(0px)';
+        card.addEventListener('mouseleave', () => {
+          card.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg) translateY(0px)';
+        });
       });
-    });
+    }
   </script>
 </body>
 </html>
